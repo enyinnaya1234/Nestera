@@ -228,6 +228,48 @@ mod tests {
         setup_env_with_rewards_enabled(true)
     }
 
+    fn has_bonus_event(
+        env: &Env,
+        user: &Address,
+        reason: soroban_sdk::Symbol,
+        points: u128,
+    ) -> bool {
+        let expected_topics =
+            (Symbol::new(env, "BonusAwarded"), user.clone(), reason).into_val(env);
+        let expected_data = points.into_val(env);
+        let contract_id = env.current_contract_address();
+        let events = env.events().all();
+
+        for i in 0..events.len() {
+            if let Some((event_contract, topics, data)) = events.get(i) {
+                if event_contract == contract_id
+                    && topics == expected_topics
+                    && data == expected_data
+                {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn bonus_event_count(env: &Env, user: &Address, reason: soroban_sdk::Symbol) -> u32 {
+        let expected_topics =
+            (Symbol::new(env, "BonusAwarded"), user.clone(), reason).into_val(env);
+        let contract_id = env.current_contract_address();
+        let events = env.events().all();
+        let mut count = 0u32;
+
+        for i in 0..events.len() {
+            if let Some((event_contract, topics, _data)) = events.get(i) {
+                if event_contract == contract_id && topics == expected_topics {
+                    count += 1;
+                }
+            }
+        }
+        count
+    }
+
     #[test]
     fn test_long_lock_bonus_applies_only_above_threshold() {
         let (env, client, _) = setup_env_with_rewards();
