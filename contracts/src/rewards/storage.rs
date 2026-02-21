@@ -1,3 +1,4 @@
+//! Rewards storage, streak logic, and bonus point calculations.
 use super::storage_types::{RewardsDataKey, UserRewards};
 use crate::errors::SavingsError;
 use crate::rewards::config::get_rewards_config;
