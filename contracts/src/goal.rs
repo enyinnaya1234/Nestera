@@ -446,7 +446,10 @@ fn remove_goal_from_user(env: &Env, user: &Address, goal_id: u64) {
 mod tests {
     use crate::rewards::storage_types::RewardsConfig;
     use crate::{NesteraContract, NesteraContractClient};
-    use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol};
+    use soroban_sdk::{
+        testutils::{Address as _, Events},
+        Address, BytesN, Env, IntoVal, Symbol,
+    };
 
     fn setup_test_env() -> (Env, NesteraContractClient<'static>) {
         let env = Env::default();

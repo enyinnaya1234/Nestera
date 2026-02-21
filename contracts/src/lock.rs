@@ -196,8 +196,8 @@ mod tests {
     use crate::rewards::storage_types::RewardsConfig;
     use crate::{NesteraContract, NesteraContractClient};
     use soroban_sdk::{
-        testutils::{Address as _, Ledger},
-        Address, BytesN, Env,
+        testutils::{Address as _, Events, Ledger},
+        Address, BytesN, Env, IntoVal, Symbol,
     };
 
     fn setup_env_with_rewards_enabled(
