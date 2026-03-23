@@ -107,7 +107,7 @@ fn test_strategy_full_lifecycle() {
     let shares = client.route_lock_to_strategy(&user1, &lock_id, &strategy_id, &lock_amount);
     assert_eq!(shares, lock_amount);
 
-    let principal = client.get_strategy_principal(&strategy_id);
+    let principal = NesteraContract::get_strategy_principal(env.clone(), strategy_id.clone());
     assert_eq!(principal, lock_amount);
 
     let position = client.get_lock_strategy_position(&lock_id).unwrap();
@@ -124,7 +124,7 @@ fn test_strategy_full_lifecycle() {
     assert_eq!(harvested, yield_amount);
 
     // Verify fee allocations: 10% of 1,000 = 100 to treasury, 900 to user yield tracking
-    let current_yield = client.get_strategy_yield(&strategy_id);
+    let current_yield = NesteraContract::get_strategy_yield(env.clone(), strategy_id.clone());
     assert_eq!(current_yield, 900);
 
     // Actually checking treasury balance via Nestera contract config functions:
@@ -139,7 +139,7 @@ fn test_strategy_full_lifecycle() {
 
     let empty_position = client.get_lock_strategy_position(&lock_id).unwrap();
     assert_eq!(empty_position.principal_deposited, 0);
-    let new_principal = client.get_strategy_principal(&strategy_id);
+    let new_principal = NesteraContract::get_strategy_principal(env.clone(), strategy_id.clone());
     assert_eq!(new_principal, 0);
 
     // 7. Advance time & withdraw lock completely
