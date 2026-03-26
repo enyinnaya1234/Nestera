@@ -8,7 +8,12 @@ import {
   Trophy,
   Banknote,
   ArrowUp,
+  PiggyBank,
+  Home,
+  Airplane,
+  ShoppingBag,
 } from "lucide-react";
+import GoalCard, { GoalStatus } from "./components/GoalCard";
 
 // export const metadata = { title: "Goal-Based Savings - Nestera" };
 
@@ -90,6 +95,90 @@ export default function GoalBasedSavingsPage() {
                 {stat.value}
               </p>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Goal cards grid */}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-8 pb-16">
+        <h2 className="text-xl md:text-2xl text-white font-bold mb-5">Your Savings Goals</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {[
+            {
+              id: '1',
+              icon: <PiggyBank size={20} />,
+              title: 'Emergency Fund',
+              status: 'active' as GoalStatus,
+              targetAmount: '$12,000',
+              currentSaved: '$6,400',
+              remainingAmount: '$5,600',
+              progressPercent: 53,
+              scheduleLabel: 'By Dec 20, 2026',
+              contributionFrequency: 'Weekly',
+              nextContributionLabel: 'Next contribution',
+              nextContributionValue: '$150 on Jun 28',
+            },
+            {
+              id: '2',
+              icon: <Home size={20} />,
+              title: 'Down Payment',
+              status: 'near-deadline' as GoalStatus,
+              targetAmount: '$40,000',
+              currentSaved: '$28,000',
+              remainingAmount: '$12,000',
+              progressPercent: 70,
+              scheduleLabel: 'Due Oct 03, 2026',
+              contributionFrequency: 'Monthly',
+              nextContributionLabel: 'Next contribution',
+              nextContributionValue: '$1,000 on Jul 01',
+            },
+            {
+              id: '3',
+              icon: <Airplane size={20} />,
+              title: 'Summer Trip',
+              status: 'behind-schedule' as GoalStatus,
+              targetAmount: '$8,000',
+              currentSaved: '$3,100',
+              remainingAmount: '$4,900',
+              progressPercent: 39,
+              scheduleLabel: 'By Aug 15, 2026',
+              contributionFrequency: 'Every other week',
+              nextContributionLabel: 'Next contribution',
+              nextContributionValue: '$250 on Jul 05',
+            },
+            {
+              id: '4',
+              icon: <ShoppingBag size={20} />,
+              title: 'New Laptop',
+              status: 'paused' as GoalStatus,
+              targetAmount: '$2,500',
+              currentSaved: '$1,500',
+              remainingAmount: '$1,000',
+              progressPercent: 60,
+              scheduleLabel: 'Paused until decision',
+              contributionFrequency: 'Paused',
+              nextContributionLabel: 'Next contribution',
+              nextContributionValue: 'N/A',
+            },
+          ].map((goal) => (
+            <GoalCard
+              key={goal.id}
+              icon={goal.icon}
+              title={goal.title}
+              status={goal.status}
+              targetAmount={goal.targetAmount}
+              currentSaved={goal.currentSaved}
+              remainingAmount={goal.remainingAmount}
+              progressPercent={goal.progressPercent}
+              scheduleLabel={goal.scheduleLabel}
+              contributionFrequency={goal.contributionFrequency}
+              nextContributionLabel={goal.nextContributionLabel}
+              nextContributionValue={goal.nextContributionValue}
+              onAddFunds={() => console.log('Add funds', goal.id)}
+              onViewDetails={() => console.log('View details', goal.id)}
+              onOverflowAction={() => console.log('More actions', goal.id)}
+            />
           ))}
         </div>
       </div>
