@@ -96,7 +96,11 @@ pub fn create_goal_save(
 
     // Update user's total balance
     let user_key = DataKey::User(user.clone());
-    if let Some(mut user_data) = env.storage().persistent().get::<DataKey, User>(&user_key) {
+    if let Some(mut user_data) = env
+        .storage()
+        .persistent()
+        .get::<DataKey, User>(&user_key)
+    {
         user_data.total_balance = user_data
             .total_balance
             .checked_add(net_initial_deposit)
@@ -169,7 +173,11 @@ pub fn deposit_to_goal_save(
 
     // Update user's total balance
     let user_key = DataKey::User(user.clone());
-    if let Some(mut user_data) = env.storage().persistent().get::<DataKey, User>(&user_key) {
+    if let Some(mut user_data) = env
+        .storage()
+        .persistent()
+        .get::<DataKey, User>(&user_key)
+    {
         user_data.total_balance = user_data
             .total_balance
             .checked_add(net_amount)
@@ -261,7 +269,11 @@ pub fn withdraw_completed_goal_save(
         .set(&DataKey::GoalSave(goal_id), &goal_save);
 
     let user_key = DataKey::User(user.clone());
-    if let Some(mut user_data) = env.storage().persistent().get::<DataKey, User>(&user_key) {
+    if let Some(mut user_data) = env
+        .storage()
+        .persistent()
+        .get::<DataKey, User>(&user_key)
+    {
         user_data.total_balance = user_data
             .total_balance
             .checked_sub(goal_save.current_amount)
@@ -356,7 +368,11 @@ pub fn break_goal_save(env: &Env, user: Address, goal_id: u64) -> Result<i128, S
         .set(&DataKey::GoalSave(goal_id), &goal_save);
 
     let user_key = DataKey::User(user.clone());
-    if let Some(mut user_data) = env.storage().persistent().get::<DataKey, User>(&user_key) {
+    if let Some(mut user_data) = env
+        .storage()
+        .persistent()
+        .get::<DataKey, User>(&user_key)
+    {
         user_data.total_balance = user_data
             .total_balance
             .checked_sub(goal_save.current_amount)
