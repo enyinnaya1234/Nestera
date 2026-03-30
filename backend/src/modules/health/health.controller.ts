@@ -4,6 +4,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TypeOrmHealthIndicator } from './indicators/typeorm.health';
 import { IndexerHealthIndicator } from './indicators/indexer.health';
 import { RpcHealthIndicator } from './indicators/rpc.health';
+import { ConnectionPoolHealthIndicator } from './indicators/connection-pool.health';
 import {
   RedisHealthIndicator,
   EmailServiceHealthIndicator,
@@ -20,6 +21,7 @@ export class HealthController {
     private readonly db: TypeOrmHealthIndicator,
     private readonly indexer: IndexerHealthIndicator,
     private readonly rpc: RpcHealthIndicator,
+    private readonly connectionPool: ConnectionPoolHealthIndicator,
     private readonly redis: RedisHealthIndicator,
     private readonly email: EmailServiceHealthIndicator,
     private readonly sorobanRpc: SorobanRpcHealthIndicator,
@@ -33,11 +35,63 @@ export class HealthController {
   @ApiOperation({
     summary: 'Full application health check',
     description:
-      'Comprehensive health check including database, RPC endpoints, and indexer service',
+      'Comprehensive health check including database, RPC endpoints, indexer service, and connection pool',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Application is healthy',
+    schema: {
+      example: {
+        status: 'ok',
+        checks: {
+          database: {
+            status: 'up',
+            responseTime: '45ms',
+            threshold: '200ms',
+          },
+          database_pool: {
+            status: 'up',
+            metrics: {
+              activeConnections: 5,
+              idleConnections: 15,
+              utilizationPercentage: 25,
+            },
+          },
+          rpc: {
+            status: 'up',
+            responseTime: '120ms',
+            currentEndpoint: 'https://soroban-testnet.stellar.org',
+            totalEndpoints: 2,
+          },
+          indexer: {
+            status: 'up',
+            timeSinceLastProcess: '3500ms',
+            threshold: '15000ms',
+            lastProcessedTime: '2026-03-25T10:30:45.123Z',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 503,
+    description: 'One or more health checks failed',
+    schema: {
+      example: {
+        status: 'error',
+        checks: {
+          database: {
+            status: 'down',
+            message: 'Database connection failed',
+          },
+        },
+      },
+    },
   })
   async check() {
     return this.health.check([
       () => this.db.isHealthy('database'),
+      () => this.connectionPool.isHealthy(),
       () => this.rpc.isHealthy('rpc'),
       () => this.indexer.isHealthy('indexer'),
     ]);
@@ -120,6 +174,7 @@ export class HealthController {
   async ready() {
     return this.health.check([
       () => this.db.isHealthy('database'),
+      () => this.connectionPool.isHealthy(),
       () => this.rpc.isHealthy('rpc'),
     ]);
   }

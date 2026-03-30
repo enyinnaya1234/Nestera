@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CorrelationIdInterceptor } from './common/interceptors/correlation-id.interceptor';
 import { AuditLogInterceptor } from './common/interceptors/audit-log.interceptor';
+import { RequestLoggingInterceptor } from './common/interceptors/request-logging.interceptor';
 import { GracefulShutdownInterceptor } from './common/interceptors/graceful-shutdown.interceptor';
 import { TieredThrottlerGuard } from './common/guards/tiered-throttler.guard';
 import { CommonModule } from './common/common.module';
@@ -39,6 +40,10 @@ import { TestRbacModule } from './test-rbac/test-rbac.module';
 import { TestThrottlingModule } from './test-throttling/test-throttling.module';
 import { ApiVersioningModule } from './common/versioning/api-versioning.module';
 import { BackupModule } from './modules/backup/backup.module';
+import { ConnectionPoolModule } from './common/database/connection-pool.module';
+import { CircuitBreakerModule } from './common/circuit-breaker/circuit-breaker.module';
+import { PostmanModule } from './common/postman/postman.module';
+import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
 import { PerformanceModule } from './modules/performance/performance.module';
 import { GracefulShutdownService } from './common/services/graceful-shutdown.service';
 
@@ -195,6 +200,9 @@ const envValidationSchema = Joi.object({
     TestThrottlingModule,
     ApiVersioningModule,
     BackupModule,
+    ConnectionPoolModule,
+    CircuitBreakerModule,
+    PostmanModule,
     PerformanceModule,
     CommonModule,
     ThrottlerModule.forRoot([
@@ -225,6 +233,10 @@ const envValidationSchema = Joi.object({
     },
     {
       provide: APP_INTERCEPTOR,
+      useClass: RequestLoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
       useClass: CorrelationIdInterceptor,
     },
     {
@@ -237,4 +249,8 @@ const envValidationSchema = Joi.object({
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}

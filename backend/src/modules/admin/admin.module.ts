@@ -5,11 +5,13 @@ import { UserModule } from '../user/user.module';
 import { SavingsModule } from '../savings/savings.module';
 import { MailModule } from '../mail/mail.module';
 import { BlockchainModule } from '../blockchain/blockchain.module';
+import { CircuitBreakerModule } from '../../common/circuit-breaker/circuit-breaker.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { AdminController } from './admin.controller';
 import { AdminSavingsController } from './admin-savings.controller';
 import { AdminWaitlistController } from './admin-waitlist.controller';
 import { AdminUsersController } from './admin-users.controller';
+import { CircuitBreakerController } from './circuit-breaker.controller';
 import { AdminDisputesController } from './admin-disputes.controller';
 import { AdminAuditLogsController } from './admin-audit-logs.controller';
 import { AdminNotificationsController } from './admin-notifications.controller';
@@ -52,6 +54,7 @@ import { Notification } from '../notifications/entities/notification.entity';
     SavingsModule,
     MailModule,
     BlockchainModule,
+    CircuitBreakerModule,
     NotificationsModule,
     EventEmitterModule,
   ],
@@ -60,6 +63,7 @@ import { Notification } from '../notifications/entities/notification.entity';
     AdminSavingsController,
     AdminWaitlistController,
     AdminUsersController,
+    CircuitBreakerController,
     AdminDisputesController,
     AdminAuditLogsController,
     AdminNotificationsController,
