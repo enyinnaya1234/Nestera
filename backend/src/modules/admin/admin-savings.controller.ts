@@ -1,4 +1,8 @@
 import {
+  Controller,
+  Get,
+  Post,
+  Patch,
   Body,
   Controller,
   Delete,
@@ -23,6 +27,7 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
 import { ExperimentsService } from '../savings/experiments.service';
+import { ProductCapacitySnapshot } from '../savings/savings.service';
 import { PageOptionsDto } from '../../common/dto/page-options.dto';
 import { CreateProductDto } from '../savings/dto/create-product.dto';
 import { UpdateProductDto } from '../savings/dto/update-product.dto';
@@ -143,5 +148,15 @@ export class AdminSavingsController {
     @Param('id') id: string,
   ): Promise<Record<string, unknown>> {
     return await this.experimentsService.getDashboard(id);
+  @Get('products/:id/capacity-metrics')
+  @ApiOperation({ summary: 'Get live capacity utilization metrics (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Live capacity metrics',
+  })
+  async getCapacityMetrics(
+    @Param('id') id: string,
+  ): Promise<ProductCapacitySnapshot> {
+    return await this.savingsService.getProductCapacitySnapshot(id);
   }
 }

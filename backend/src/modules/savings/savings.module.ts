@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { SavingsController } from './savings.controller';
 import { SavingsService } from './savings.service';
 import { PredictiveEvaluatorService } from './services/predictive-evaluator.service';
+import { RecommendationService } from './services/recommendation.service';
 import { SavingsProduct } from './entities/savings-product.entity';
 import { UserSubscription } from './entities/user-subscription.entity';
 import { SavingsGoal } from './entities/savings-goal.entity';
@@ -19,6 +21,7 @@ import { ExperimentsService } from './experiments.service';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
       SavingsProduct,
       UserSubscription,
