@@ -78,6 +78,15 @@ export class CreateProductDto {
   tvlAmount?: number;
 
   @ApiPropertyOptional({
+    example: 250000,
+    description: 'Maximum liquidity-backed capacity for the product',
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  maxCapacity?: number;
+
+  @ApiPropertyOptional({
     enum: RiskLevel,
     default: RiskLevel.LOW,
     description: 'Risk level classification',
@@ -85,6 +94,16 @@ export class CreateProductDto {
   @IsOptional()
   @IsEnum(RiskLevel)
   riskLevel?: RiskLevel;
+
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Initial product version',
+    default: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  version?: number;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()

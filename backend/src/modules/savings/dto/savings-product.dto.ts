@@ -35,6 +35,9 @@ export class SavingsProductDto {
   @ApiProperty({ description: 'Whether product is active' })
   isActive: boolean;
 
+  @ApiProperty({ description: 'Current product version' })
+  version: number;
+
   @ApiProperty({
     description: 'Risk level classification (e.g. Low, Medium, High)',
     enum: RiskLevel,
@@ -43,6 +46,20 @@ export class SavingsProductDto {
 
   @ApiProperty({ description: 'Total Value Locked (aggregated local balance)' })
   tvlAmount: number;
+
+  @ApiPropertyOptional({
+    description: 'Maximum liquidity-backed capacity for the product',
+  })
+  maxCapacity: number | null;
+
+  @ApiProperty({ description: 'Current utilized capacity amount' })
+  utilizedCapacity: number;
+
+  @ApiProperty({ description: 'Remaining capacity amount' })
+  availableCapacity: number;
+
+  @ApiProperty({ description: 'Capacity utilization percentage' })
+  utilizationPercentage: number;
 
   @ApiProperty({ description: 'Product creation timestamp' })
   createdAt: Date;

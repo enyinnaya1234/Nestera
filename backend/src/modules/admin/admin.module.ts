@@ -13,7 +13,9 @@ import { AdminUsersController } from './admin-users.controller';
 import { AdminDisputesController } from './admin-disputes.controller';
 import { AdminAuditLogsController } from './admin-audit-logs.controller';
 import { AdminNotificationsController } from './admin-notifications.controller';
+
 import { AdminTransactionsController } from './admin-transactions.controller';
+
 import { AdminUsersService } from './admin-users.service';
 import { AdminSavingsService } from './admin-savings.service';
 import { AdminDisputesService } from './admin-disputes.service';
@@ -27,6 +29,8 @@ import { SavingsProduct } from '../savings/entities/savings-product.entity';
 import { LedgerTransaction } from '../blockchain/entities/transaction.entity';
 import { Transaction } from '../transactions/entities/transaction.entity';
 import { Dispute, DisputeTimeline } from '../disputes/entities/dispute.entity';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuditLog } from '../../common/entities/audit-log.entity';
 import { Notification } from '../notifications/entities/notification.entity';
 
