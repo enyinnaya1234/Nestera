@@ -1,22 +1,21 @@
-import {
-  IsEmail,
-  IsString,
-  MinLength,
-  MaxLength,
-  IsOptional,
-} from 'class-validator';
+import { IsEmail, IsString, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsStellarPublicKey } from '../../common/validators/is-stellar-key.validator';
+import { IsStrongPassword } from '../../common/validators/is-strong-password.validator';
 
 export class RegisterDto {
   @ApiProperty({ example: 'alice@example.com' })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'supersecret123' })
+  @ApiProperty({
+    example: 'MyP@ssw0rd!',
+    description:
+      'Must be 8-72 characters and contain at least one uppercase letter, ' +
+      'one lowercase letter, one digit, and one special character.',
+  })
   @IsString()
-  @MinLength(8)
-  @MaxLength(32)
+  @IsStrongPassword()
   password: string;
 
   @ApiProperty({ example: 'Alice', required: false })
