@@ -240,7 +240,11 @@ export class StellarService implements OnModuleInit {
         transaction.sign(sourceKeypair);
 
         const sendResponse = await rpcServer.sendTransaction(transaction);
-        if (rpc.Api.isSendTransactionError(sendResponse)) {
+        if (
+          'errorResult' in sendResponse &&
+          sendResponse.errorResult !== undefined &&
+          sendResponse.errorResult !== null
+        ) {
           throw new Error(
             `Soroban submission failed: ${sendResponse.errorResult ?? sendResponse.status}`,
           );

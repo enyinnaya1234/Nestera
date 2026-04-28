@@ -913,6 +913,7 @@ export class GovernanceService {
     if (!executorSecretKey) {
       throw new Error('GOVERNANCE_EXECUTOR_SECRET_KEY is not configured');
     }
+    const actionRecord = proposal.action as Record<string, unknown>;
 
     switch (proposal.type) {
       case ProposalType.RATE_CHANGE: {
@@ -921,13 +922,13 @@ export class GovernanceService {
           'CONTRACT_ID',
         );
         const method = process.env.GOVERNANCE_RATE_CHANGE_METHOD ?? 'set_rate';
-        const target = this.readRequiredString(proposal.action, 'target');
+        const target = this.readRequiredString(actionRecord, 'target');
         const newValue = this.readRequiredPositiveNumber(
-          proposal.action,
+          actionRecord,
           'newValue',
         );
         const duration = this.readOptionalPositiveInteger(
-          proposal.action,
+          actionRecord,
           'duration',
         );
         const args = [target, newValue, ...(duration ? [duration] : [])];
@@ -946,10 +947,10 @@ export class GovernanceService {
           'CONTRACT_ID',
         );
         const method = process.env.GOVERNANCE_TREASURY_TRANSFER_METHOD ?? 'transfer';
-        const recipient = this.readRequiredString(proposal.action, 'recipient');
-        const amount = this.readRequiredPositiveNumber(proposal.action, 'amount');
+        const recipient = this.readRequiredString(actionRecord, 'recipient');
+        const amount = this.readRequiredPositiveNumber(actionRecord, 'amount');
         const amountStroops = Math.round(amount * STROOPS_PER_TOKEN);
-        const asset = this.readOptionalString(proposal.action, 'asset') ?? 'NST';
+        const asset = this.readOptionalString(actionRecord, 'asset') ?? 'NST';
         return this.stellarService.invokeContractWrite(
           contractId,
           method,
